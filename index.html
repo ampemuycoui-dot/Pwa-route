@@ -14,7 +14,7 @@
                 <h3>Iloilo Travel Route</h3>
             </div>
             <div class="card-body text-center">
-                <select id="route" class="form-select mb-3">
+                <select id="rt" class="form-select mb-3">
                     <option value="Iloilo City - Oton">Iloilo City - Oton</option>
                     <option value="Iloilo City - Pavia">Iloilo City - Pavia</option>
                     <option value="Iloilo City - Jaro">Iloilo City - Jaro</option>
@@ -23,65 +23,46 @@
                 </select>
                 
                 <div class="d-grid gap-2 d-md-block">
-                    <button onclick="saveRoute()" class="btn btn-success">Save Route</button>
-                    <button onclick="displayRoutes()" class="btn btn-warning">Show Routes</button>
+                    <button onclick="save()" class="btn btn-success">Save Route</button>
+                    <button onclick="show()" class="btn btn-warning">Show Routes</button>
                 </div>
             </div>
         </div>
 
-        <div class="row mt-4" id="output"></div>
+        <div class="row mt-4" id="out"></div>
     </div>
 
     <script>
-        
-
-        function saveRoute() {
-            let route = document.getElementById("route").value;
-            
-         
-            let routes = JSON.parse(localStorage.getItem("iloiloRoutes")) || [];
-            
-            routes.push(route);
-            
-          
-            localStorage.setItem("iloiloRoutes", JSON.stringify(routes));
-            
-            alert( route + " Route Saved Successfully!");
-
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
         }
 
-        function displayRoutes() {
-            
-            window.alert("this is the route that you choose " + "\r\n" + " thank you!");
+        function save() {
+            let r = document.getElementById("rt").value;
+            let list = JSON.parse(localStorage.getItem("iloiloRts")) || [];
+            list.push(r);
+            localStorage.setItem("iloiloRts", JSON.stringify(list));
+            alert(r + " Route Saved Successfully!");
+        }
 
-            let routes = JSON.parse(localStorage.getItem("iloiloRoutes")) || [];
-            let output = document.getElementById("output");
-            output.innerHTML = "";
+        function show() {
+            window.alert("this is the route that you choose \n thank you!");
+            let list = JSON.parse(localStorage.getItem("iloiloRts")) || [];
+            let el = document.getElementById("out");
+            el.innerHTML = "";
 
-          
-            routes.forEach(function(route) {
-                output.innerHTML += `
+            list.forEach(function(r) {
+                el.innerHTML += `
                     <div class="col-md-4 mb-3">
                         <div class="card text-bg-primary shadow">
                             <div class="card-body">
                                 <h5 class="card-title">Saved Route</h5>
-                                <p class="card-text">${route}</p>
+                                <p class="card-text">${r}</p>
                             </div>
                         </div>
                     </div>`;
             });
         }
-
-         if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("/service-worker.js")
-          .then(() => {
-            console.log("ayos! rehistro as service worker");
-          })
-          .catch((error) => {
-            console.log("Registration failed: ", error);
-          });
-      }
     </script>
 </body>
 </html>
